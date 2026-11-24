@@ -1,5 +1,5 @@
 // Service worker de LA TREMPE APP : fonctionnement sans réseau et notifications.
-var VERSION = 'trempe-1.2.0';
+var VERSION = 'trempe-1.2.1';
 var FICHIERS = [
   './', 'index.html', 'manifest.webmanifest', 'css/app.css',
   'js/config.js', 'js/api.js', 'js/notif.js', 'js/app.js', 'js/progres.js', 'js/demo.js',
