@@ -100,14 +100,16 @@
     div.className = 'connexion';
     div.innerHTML =
       '<h1>La Trempe<br>App</h1>' +
-      '<p>Entre le code personnel reçu de ton coach. Tu ne le feras qu’une fois sur ce téléphone.</p>' +
+      '<p>Colle le lien personnel reçu de ton coach (ou seulement le code). Tu ne le feras qu’une fois sur ce téléphone.</p>' +
       (msg ? '<p class="erreur-champ" style="color:#fff">' + esc(msg) + '</p>' : '') +
       '<label class="sr" for="code">Code personnel</label>' +
-      '<input id="code" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Ton code">' +
+      '<input id="code" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Ton lien ou ton code">' +
       '<button type="button" class="btn centre press" id="valider-code">Entrer</button>';
     document.body.appendChild(div);
     $('#valider-code', div).addEventListener('click', function () {
       var c = $('#code', div).value.trim();
+      var m = c.match(/[?&]code=([A-Za-z0-9_-]+)/);
+      if (m) { c = m[1]; }
       if (!c) { return; }
       Api.enregistrerCode(c);
       div.remove();

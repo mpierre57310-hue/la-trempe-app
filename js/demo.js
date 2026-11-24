@@ -156,3 +156,55 @@ window.TREMPE_DEMO = function () {
     mesures: { pesee: p.pesee }
   };
 };
+
+// Données fictives de l'écran Progrès (mêmes champs que ?api=progres).
+window.TREMPE_DEMO_PROGRES = function () {
+  var profil = window.TREMPE_DEMO_PROFIL();
+  var variante = profil === 'course' ? 'Course' : (profil === 'muscu' ? 'Muscu' : 'Mixte');
+  var jour = function (n) { var d = new Date(); d.setDate(d.getDate() - n); return d; };
+  var iso = function (d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
+  var jj = function (d) { return String(d.getDate()).padStart(2, '0') + '/' + String(d.getMonth() + 1).padStart(2, '0'); };
+  var lundi = function (sem) { var d = jour(0); d.setDate(d.getDate() - ((d.getDay() + 6) % 7) - 7 * sem); return d; };
+  var journal = [];
+  [84, 70, 56, 42, 28, 14, 3].forEach(function (n, i) {
+    journal.push({ iso: iso(jour(n)), date: jj(jour(n)), indicateur: 'Poids', valeur: [82.4, 81.9, 81.5, 81.6, 80.8, 80.3, 79.9][i], note: '' });
+    if (i % 2 === 0) { journal.push({ iso: iso(jour(n)), date: jj(jour(n)), indicateur: 'Tour de taille', valeur: [92, 90.5, 89, 88][i / 2], note: '' }); }
+  });
+  var histoMuscu = [], histoCourse = [];
+  [1, 2, 3].forEach(function (s) {
+    var l = lundi(s);
+    histoMuscu.push({ iso: iso(l), semaine: jj(l), seance: 'Séance A', exercice: 'Squat', volume: '4 x 6', charge: (90 - s * 2.5) + ' kg', atteint: s === 2 ? 'Non atteint' : 'Atteint', commentaire: s === 2 ? 'Dernière série difficile' : '', rpe: 8 });
+    histoMuscu.push({ iso: iso(l), semaine: jj(l), seance: 'Séance A', exercice: 'Développé couché', volume: '4 x 8', charge: (70 - s * 2.5) + ' kg', atteint: 'Atteint', commentaire: '', rpe: 7 });
+    histoMuscu.push({ iso: iso(l), semaine: jj(l), seance: 'Séance B', exercice: 'Soulevé de terre', volume: '3 x 5', charge: (120 - s * 5) + ' kg', atteint: 'Atteint', commentaire: '', rpe: 8 });
+    histoCourse.push({ iso: iso(l), semaine: jj(l), seance: 'Footing Z2', jour: 'Mardi', statut: 'Fait', duree: 45, distance: 8.2, rpe: 4, atteint: '', commentaire: '' });
+    histoCourse.push({ iso: iso(l), semaine: jj(l), seance: 'Fractionné 6 x 1000 m', jour: 'Jeudi', statut: s === 3 ? 'Manquée' : 'Fait', duree: s === 3 ? '' : 55, distance: s === 3 ? '' : 10.5, rpe: s === 3 ? '' : 8, atteint: '', commentaire: s === 3 ? 'Malade' : 'Bonnes sensations' });
+  });
+  var d = {
+    ok: true, variante: variante,
+    objectifs: [
+      { nom: 'Poids', unite: 'kg', depart: '82,4', cible: '78', echeance: '31/01', derniere: '79,9', date: jj(jour(3)), pct: 57 }
+    ],
+    indicateurs: [{ nom: 'Poids', unite: 'kg' }, { nom: 'Tour de taille', unite: 'cm' }],
+    journal: journal,
+    rm1: [], exercices: ['Squat', 'Développé couché', 'Soulevé de terre', 'Tractions'],
+    cibles: { pesees: { n: 2, freq: 'semaine' }, mensurations: { n: 1, freq: 'mois' } },
+    histoMuscu: variante === 'Course' ? [] : histoMuscu,
+    histoCourse: variante === 'Muscu' ? [] : histoCourse,
+    records: [], tests: [], zones: [], testFcPossible: false, testTempsPossible: false
+  };
+  if (variante !== 'Course') {
+    d.objectifs.push({ nom: 'Squat RM1', unite: 'kg', depart: '95', cible: '120', echeance: '30/04', derniere: '105', date: jj(jour(20)), pct: 40 });
+    d.rm1 = [{ exercice: 'Squat', iso: iso(jour(20)), date: jj(jour(20)), charge: 105, commentaire: '' }, { exercice: 'Développé couché', iso: iso(jour(34)), date: jj(jour(34)), charge: 80, commentaire: '' }];
+  }
+  if (variante !== 'Muscu') {
+    d.objectifs.push({ nom: '10 km', unite: 'temps', depart: '52:10', cible: '47:00', echeance: '12/04', derniere: '49:40', date: jj(jour(30)), pct: 48 });
+    d.records = [{ distance: '5 km', temps: '23:05', date: jj(jour(60)) }, { distance: '10 km', temps: '49:40', date: jj(jour(30)), objectif: '47:00' }, { distance: 'Semi-marathon', temps: '', date: '', objectif: '1:50:00' }, { distance: 'Marathon', temps: '', date: '' }];
+    d.tests = [{ date: jj(jour(25)), temps: '10:45', resultat: 'VMA 14,9 km/h', commentaire: '' }, { date: jj(jour(110)), temps: '11:20', resultat: 'VMA 14,1 km/h', commentaire: '' }];
+    d.zones = [
+      { n: 1, nom: 'Récupération', fc: '< 135 bpm', allure: '' }, { n: 2, nom: 'Endurance', fc: '135-150 bpm', allure: '' },
+      { n: 3, nom: 'Tempo', fc: '150-163 bpm', allure: '' }, { n: 4, nom: 'Seuil', fc: '163-175 bpm', allure: '4:50-5:05 /km' }, { n: 5, nom: 'VMA', fc: '> 175 bpm', allure: '4:02-4:20 /km' }
+    ];
+    d.vma = '14,9'; d.vo2 = '52'; d.dernierTest = jj(jour(25)); d.fcSeuil = '171 bpm'; d.testTempsPossible = true; d.testFcPossible = true;
+  }
+  return d;
+};
