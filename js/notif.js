@@ -22,7 +22,18 @@
       .then(function () { return chargerScript(base + 'firebase-messaging-compat.js'); })
       .then(function () {
         if (!window.firebase.apps.length) { window.firebase.initializeApp(CFG.firebase); }
-        return window.firebase.messaging();
+        var m = window.firebase.messaging();
+        // Appli ouverte à l'écran : Firebase ne passe pas par le service worker, on affiche la notification ici.
+        m.onMessage(function (msg) {
+          var d = (msg && msg.data) || {};
+          navigator.serviceWorker.ready.then(function (reg) {
+            reg.showNotification(d.titre || 'Le mot du coach', {
+              body: d.texte || '', icon: 'icons/icone-192.png', badge: 'icons/badge-96.png',
+              tag: d.tag || 'mot-du-coach', data: { url: d.url || './' }
+            });
+          });
+        });
+        return m;
       });
     return pret;
   }
