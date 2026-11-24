@@ -5,14 +5,14 @@ self.TREMPE_CONFIG = {
 
   // Projet Firebase (notifications). À remplir avec les valeurs données par la console Firebase.
   firebase: {
-    apiKey: '',
-    authDomain: '',
-    projectId: '',
-    messagingSenderId: '',
-    appId: ''
+    apiKey: 'AIzaSyB6vo7iqsG-d8uClmwoYpthVDtDKErzwqg',
+    authDomain: 'la-trempe-app.firebaseapp.com',
+    projectId: 'la-trempe-app',
+    messagingSenderId: '851600175497',
+    appId: '1:851600175497:web:84d578296ad6942fbcb158'
   },
   // Clé publique « Web Push » (Firebase > Paramètres du projet > Cloud Messaging > Certificats Web Push).
-  vapidKey: '',
+  vapidKey: 'BO6az6eIQXYY2n60uSIawdEXr7hIR0OqlzQc1-eeR0soYSvvV9h_TNSkvK2ah2I4XXsm3IEbtL86_S08xSpdQ6o',
 
   demo: false,
   version: '1.1.0'
